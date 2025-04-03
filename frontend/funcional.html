@@ -102,15 +102,6 @@
     .dynamic-input label {
       font-weight: bold;
     }
-    .negate-container {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .negate-container input[type="checkbox"] {
-      width: 16px;
-      height: 16px;
-    }
   </style>
 </head>
 <body>
@@ -136,17 +127,10 @@
   <div class="container">
     <h2>Proposiciones</h2>
     <div class="data-section">
+      <!-- Aquí se muestra el label dinámico con la clave actual -->
       <div class="dynamic-input">
-        <!-- Label dinámico que muestra la clave actual -->
         <label id="currentKeyLabel">Ingrese el valor para <strong>p</strong>:</label>
-        <!-- Contenedor para el input y el checkbox -->
-        <div class="negate-container">
-          <input type="text" id="propositionInput" placeholder="Ingresa el texto para la proposición">
-          <label>
-            <input type="checkbox" id="negateCheckbox">
-            Negar
-          </label>
-        </div>
+        <input type="text" id="propositionInput" placeholder="Ingresa el texto para la proposición">
       </div>
       <button id="saveProposition">Save</button>
       <div id="dataColumn">
@@ -168,7 +152,7 @@
 
   <script>
     // Orden de claves para las proposiciones
-    const allowedKeys = ["p", "q", "r", "s", "t", "q", "u"];
+    const allowedKeys = ["p", "q", "r", "s", "t", "¬q", "u"];
     let currentIndex = 0;
     
     // Array para almacenar las proposiciones en el formato "clave: texto"
@@ -183,7 +167,6 @@
         document.getElementById('currentKeyLabel').innerHTML = 
           `<strong>Se han ingresado todas las proposiciones.</strong>`;
         document.getElementById('propositionInput').disabled = true;
-        document.getElementById('negateCheckbox').disabled = true;
         document.getElementById('saveProposition').disabled = true;
       }
     }
@@ -215,8 +198,7 @@
       }
     });
 
-    // Guardar la proposición ingresada y asignarla a la clave actual,
-    // tomando en cuenta si se desea negar o no.
+    // Guardar la proposición ingresada y asignarla a la clave actual
     document.getElementById('saveProposition').addEventListener('click', () => {
       const inputVal = document.getElementById('propositionInput').value.trim();
       if (!inputVal) {
@@ -224,16 +206,12 @@
         return;
       }
       // Obtener la clave actual según el orden
-      const key = allowedKeys[currentIndex];
-      // Si el checkbox "Negar" está marcado, se antepone "¬" a la clave
-      const isNegated = document.getElementById('negateCheckbox').checked;
-      const keyToUse = isNegated ? "¬" + key : key;
+      const currentKey = allowedKeys[currentIndex];
       // Agregar a la lista en el formato "clave: texto"
-      proposiciones.push(`${keyToUse}: ${inputVal}`);
+      proposiciones.push(`${currentKey}: ${inputVal}`);
       updateDataList();
-      // Limpiar el campo de entrada y desmarcar el checkbox para la siguiente entrada
+      // Limpiar el campo de entrada y pasar a la siguiente clave
       document.getElementById('propositionInput').value = "";
-      document.getElementById('negateCheckbox').checked = false;
       currentIndex++;
       updateCurrentKeyLabel();
     });
