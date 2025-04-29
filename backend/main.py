@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from routes import message_routes
+# from routes import message_routes
 
 app = FastAPI(
     title="Simple API",
@@ -18,7 +18,7 @@ app.add_middleware(
 )
 
 # Include routes
-app.include_router(message_routes.router)
+# app.include_router(message_routes.router)
 
 if __name__ == "__main__":
     import uvicorn
