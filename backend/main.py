@@ -1,10 +1,11 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 # from routes import message_routes
+import database  
 
 app = FastAPI(
-    title="Simple API",
-    description="API sencilla para el taller",
+    title="API Horarios",
+    description="API  para el taller de tercer Corte",
     version="0.1.0"
 )
 
