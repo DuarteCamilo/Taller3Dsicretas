@@ -10,3 +10,6 @@ class Horario(Base):
     # Relación uno a muchos con Bloques
     bloques = relationship("Bloque", back_populates="horario")
     
+    # Relación uno a muchos con Cursos
+    cursos = relationship("Curso", back_populates="horario")
+    
