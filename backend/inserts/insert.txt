@@ -1,0 +1,215 @@
+INSERT INTO public.materias (codigo, nombre, cantidad_horas, requiere_sala_sistemas) VALUES
+('KOT-268', 'Programación', 2, TRUE),
+('BXD-614', 'Seguridad Informática IV', 3, TRUE),
+('KAS-599', 'Electiva IV', 2, TRUE),
+('CIR-405', 'Bases de Datos', 3, TRUE),
+('GTQ-111', 'Computación Gráfica I', 4, TRUE),
+('NAK-535', 'Análisis Numérico', 2, TRUE),
+('OSL-737', 'Ingeniería de Software IV', 2, TRUE),
+('DMR-537', 'Ética Profesional V', 2, TRUE),
+('RFB-114', 'Estadística I', 3, TRUE),
+('XYD-386', 'Física I', 4, TRUE),
+('CFD-938', 'Compiladores', 2, TRUE),
+('IPY-865', 'Inteligencia Artificial III', 2, TRUE),
+('PWJ-013', 'Sistemas Operativos', 4, TRUE),
+('FEP-690', 'Ingeniería de Software I', 2, TRUE),
+('IKU-367', 'Programación I', 3, TRUE),
+('YQF-793', 'Teoría de la Computación II', 4, TRUE),
+('EBK-830', 'Redes II', 2, TRUE),
+('ZEX-252', 'Desarrollo Web', 4, TRUE),
+('OKG-014', 'Arquitectura de Computadores II', 2, TRUE),
+('XGE-459', 'Algoritmos', 2, TRUE),
+('NRO-250', 'Matemáticas III', 2, TRUE),
+('QKE-967', 'Electiva V', 4, TRUE),
+('JTV-209', 'Cálculo III', 4, TRUE),
+('TUR-822', 'Estadística', 2, TRUE),
+('SYJ-396', 'Computación Gráfica III', 4, TRUE),
+('FCN-106', 'Ética Profesional II', 4, FALSE),
+('PZD-768', 'Programación III', 4, FALSE),
+('LGK-404', 'Redes', 2, FALSE),
+('QCR-340', 'Matemáticas II', 4, FALSE),
+('YAD-777', 'Física', 4, FALSE),
+('XTK-135', 'Desarrollo Web II', 3, FALSE),
+('TXP-916', 'Inteligencia Artificial II', 2, FALSE),
+('XZF-745', 'Electiva I', 4, FALSE),
+('QJM-800', 'Bases de Datos I', 2, FALSE),
+('AIE-107', 'Arquitectura de Computadores', 2, FALSE),
+('URX-426', 'Seguridad Informática', 2, FALSE),
+('DKW-605', 'Sistemas Operativos I', 3, FALSE),
+('TVF-570', 'Algoritmos I', 2, FALSE),
+('VJD-870', 'Compiladores II', 3, FALSE),
+('BXK-493', 'Teoría de la Computación', 4, FALSE),
+('VLF-254', 'Física II', 3, FALSE),
+('GME-391', 'Ingeniería de Software V', 4, FALSE),
+('WRX-839', 'Cálculo', 3, FALSE),
+('HBX-439', 'Electiva', 3, FALSE),
+('KVU-366', 'Programación V', 4, FALSE),
+('YJB-142', 'Matemáticas I', 3, FALSE),
+('IYC-334', 'Estadística II', 3, FALSE),
+('NJZ-236', 'Computación Gráfica II', 3, FALSE),
+('UWE-002', 'Cálculo I', 2, FALSE),
+('POC-701', 'Redes V', 4, FALSE);
+
+
+-- Bloque A
+INSERT INTO public.salones (bloque, numero, es_sistemas) VALUES
+-- Piso 1
+('A', 100, false), ('A', 101, false), ('A', 102, false), ('A', 103, false), ('A', 104, false),
+('A', 105, false), ('A', 106, false), ('A', 107, false), ('A', 108, false), ('A', 109, false),
+('A', 110, false), ('A', 111, false), ('A', 112, false), ('A', 113, false), ('A', 114, false),
+('A', 115, false), ('A', 116, false), ('A', 117, false), ('A', 118, false), ('A', 119, false), ('A', 120, false),
+-- Piso 2
+('A', 200, false), ('A', 201, false), ('A', 202, false), ('A', 203, false), ('A', 204, false),
+('A', 205, false), ('A', 206, false), ('A', 207, false), ('A', 208, false), ('A', 209, false),
+('A', 210, false), ('A', 211, false), ('A', 212, false), ('A', 213, false), ('A', 214, false),
+('A', 215, true), ('A', 216, true), ('A', 217, false), ('A', 218, false), ('A', 219, false), ('A', 220, false),
+-- Piso 3
+('A', 300, false), ('A', 301, false), ('A', 302, false), ('A', 303, false), ('A', 304, false),
+('A', 305, false), ('A', 306, false), ('A', 307, false), ('A', 308, false), ('A', 309, false),
+('A', 310, false), ('A', 311, false), ('A', 312, false), ('A', 313, false), ('A', 314, false),
+('A', 315, false), ('A', 316, false), ('A', 317, false), ('A', 318, false), ('A', 319, false), ('A', 320, false),
+-- Piso 4
+('A', 400, false), ('A', 401, false), ('A', 402, false), ('A', 403, false), ('A', 404, false),
+('A', 405, false), ('A', 406, false), ('A', 407, false), ('A', 408, false), ('A', 409, false),
+('A', 410, false), ('A', 411, true), ('A', 412, true), ('A', 413, false), ('A', 414, false),
+('A', 415, true), ('A', 416, true), ('A', 417, true), ('A', 418, false), ('A', 419, false), ('A', 420, false);
+
+-- Bloque B (60 salones: 3 pisos x 20)
+INSERT INTO public.salones (bloque, numero, es_sistemas) VALUES
+-- Piso 1
+('B', 100, false), ('B', 101, false), ('B', 102, false), ('B', 103, false), ('B', 104, false),
+('B', 105, false), ('B', 106, false), ('B', 107, false), ('B', 108, false), ('B', 109, false),
+('B', 110, false), ('B', 111, false), ('B', 112, false), ('B', 113, false), ('B', 114, false),
+('B', 115, false), ('B', 116, false), ('B', 117, false), ('B', 118, false), ('B', 119, false),
+-- Piso 2
+('B', 200, false), ('B', 201, false), ('B', 202, false), ('B', 203, false), ('B', 204, false),
+('B', 205, false), ('B', 206, false), ('B', 207, false), ('B', 208, false), ('B', 209, false),
+('B', 210, false), ('B', 211, false), ('B', 212, false), ('B', 213, false), ('B', 214, false),
+('B', 215, false), ('B', 216, false), ('B', 217, false), ('B', 218, false), ('B', 219, false),
+-- Piso 3
+('B', 300, false), ('B', 301, false), ('B', 302, false), ('B', 303, false), ('B', 304, false),
+('B', 305, false), ('B', 306, false), ('B', 307, false), ('B', 308, false), ('B', 309, false),
+('B', 310, false), ('B', 311, false), ('B', 312, false), ('B', 313, false), ('B', 314, false),
+('B', 315, false), ('B', 316, false), ('B', 317, false), ('B', 318, false), ('B', 319, false);
+
+-- Bloque C (60 salones: misma lógica)
+INSERT INTO public.salones (bloque, numero, es_sistemas) VALUES
+-- Piso 1
+('C', 100, false), ('C', 101, false), ('C', 102, false), ('C', 103, false), ('C', 104, false),
+('C', 105, false), ('C', 106, false), ('C', 107, false), ('C', 108, false), ('C', 109, false),
+('C', 110, false), ('C', 111, false), ('C', 112, false), ('C', 113, false), ('C', 114, false),
+('C', 115, false), ('C', 116, false), ('C', 117, false), ('C', 118, false), ('C', 119, false),
+-- Piso 2
+('C', 200, false), ('C', 201, false), ('C', 202, false), ('C', 203, false), ('C', 204, false),
+('C', 205, false), ('C', 206, false), ('C', 207, false), ('C', 208, false), ('C', 209, false),
+('C', 210, false), ('C', 211, false), ('C', 212, false), ('C', 213, false), ('C', 214, false),
+('C', 215, false), ('C', 216, false), ('C', 217, false), ('C', 218, false), ('C', 219, false),
+-- Piso 3
+('C', 300, false), ('C', 301, false), ('C', 302, false), ('C', 303, false), ('C', 304, false),
+('C', 305, false), ('C', 306, false), ('C', 307, false), ('C', 308, false), ('C', 309, false),
+('C', 310, false), ('C', 311, false), ('C', 312, false), ('C', 313, false), ('C', 314, false),
+('C', 315, false), ('C', 316, false), ('C', 317, false), ('C', 318, false), ('C', 319, false);
+
+-- Inserción de 100 docentes con restricciones y materias aleatorias
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (1234567, 'Carlos Rodríguez', ARRAY['mañana', 'tarde'], ARRAY[1, 5, 10, 15]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (2345678, 'María González', ARRAY['tarde'], ARRAY[2, 7, 12]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (3456789, 'Juan Pérez', ARRAY['mañana', 'noche'], ARRAY[3, 8, 13, 18, 23]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (4567890, 'Laura Martínez', ARRAY['noche'], ARRAY[4, 9, 14, 19]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (5678901, 'Pedro Sánchez', ARRAY['mañana'], ARRAY[5, 10, 15, 20, 25]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (6789012, 'Ana López', ARRAY['tarde', 'noche'], ARRAY[6, 11, 16]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (7890123, 'Luis Ramírez', ARRAY['mañana'], ARRAY[7, 12, 17, 22]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (8901234, 'Elena Torres', ARRAY['tarde'], ARRAY[8, 13, 18]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (9012345, 'Roberto Flores', ARRAY['noche'], ARRAY[9, 14, 19, 24]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (9123456, 'Sofía Vargas', ARRAY['mañana', 'tarde'], ARRAY[10, 15, 20]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (9234567, 'Javier Reyes', ARRAY['tarde'], ARRAY[11, 16, 21, 26, 31]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (9345678, 'Camila Castro', ARRAY['noche'], ARRAY[12, 17, 22]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (9456789, 'Daniel Ortiz', ARRAY['mañana'], ARRAY[13, 18, 23, 28, 33, 38]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (9567890, 'Valentina Herrera', ARRAY['tarde', 'noche'], ARRAY[14, 19, 24]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (9678901, 'Andrés Díaz', ARRAY['mañana'], ARRAY[15, 20, 25, 30, 35]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (9789012, 'Patricia Rojas', ARRAY['tarde'], ARRAY[16, 21, 26]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (9890123, 'Gabriel Moreno', ARRAY['noche'], ARRAY[17, 22, 27, 32, 37, 42]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (9901234, 'Isabella Silva', ARRAY['mañana', 'tarde'], ARRAY[18, 23, 28]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (9912345, 'Sebastián Mendoza', ARRAY['tarde'], ARRAY[19, 24, 29, 34, 39]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (9923456, 'Alejandra Gutiérrez', ARRAY['noche'], ARRAY[20, 25, 30]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (9934567, 'Mateo Navarro', ARRAY['mañana'], ARRAY[21, 26, 31, 36, 41, 46]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (9945678, 'Natalia Romero', ARRAY['tarde', 'noche'], ARRAY[22, 27, 32]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (9956789, 'Diego Fernández', ARRAY['mañana'], ARRAY[23, 28, 33, 38, 43]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (9967890, 'Lucía Gómez', ARRAY['tarde'], ARRAY[24, 29, 34]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (9978901, 'Fernando Jiménez', ARRAY['noche'], ARRAY[25, 30, 35, 40, 45, 50]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (9989012, 'Mariana Ruiz', ARRAY['mañana', 'tarde'], ARRAY[26, 31, 36]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (9990123, 'Emilio Álvarez', ARRAY['tarde'], ARRAY[27, 32, 37, 42, 47]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (9991234, 'Paula Soto', ARRAY['noche'], ARRAY[28, 33, 38]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (9992345, 'Tomás Vega', ARRAY['mañana'], ARRAY[29, 34, 39, 44, 49]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (9993456, 'Victoria Molina', ARRAY['tarde', 'noche'], ARRAY[30, 35, 40]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (9994567, 'Benjamín Ramos', ARRAY['mañana'], ARRAY[1, 6, 11, 16, 21, 26]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (9995678, 'Antonia Medina', ARRAY['tarde'], ARRAY[2, 7, 12]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (9996789, 'Ricardo Delgado', ARRAY['noche'], ARRAY[3, 8, 13, 18, 23]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (9997890, 'Catalina Castillo', ARRAY['mañana', 'tarde'], ARRAY[4, 9, 14]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (9998901, 'Joaquín Ríos', ARRAY['tarde'], ARRAY[5, 10, 15, 20, 25, 30]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (9999012, 'Martina Guerrero', ARRAY['noche'], ARRAY[6, 11, 16]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (10000123, 'Ignacio Campos', ARRAY['mañana'], ARRAY[7, 12, 17, 22, 27]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (10001234, 'Isidora Sandoval', ARRAY['tarde', 'noche'], ARRAY[8, 13, 18]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (10012345, 'Nicolás Araya', ARRAY['mañana'], ARRAY[9, 14, 19, 24, 29, 34]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (10123456, 'Constanza Vera', ARRAY['tarde'], ARRAY[10, 15, 20]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (10234567, 'Maximiliano Espinoza', ARRAY['noche'], ARRAY[11, 16, 21, 26, 31, 36]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (10345678, 'Javiera Fuentes', ARRAY['mañana', 'tarde'], ARRAY[12, 17, 22]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (10456789, 'Vicente Tapia', ARRAY['tarde'], ARRAY[13, 18, 23, 28, 33]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (10567890, 'Francisca Valenzuela', ARRAY['noche'], ARRAY[14, 19, 24]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (10678901, 'Cristóbal Miranda', ARRAY['mañana'], ARRAY[15, 20, 25, 30, 35, 40]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (10789012, 'Magdalena Bravo', ARRAY['tarde', 'noche'], ARRAY[16, 21, 26]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (10890123, 'Esteban Parra', ARRAY['mañana'], ARRAY[17, 22, 27, 32, 37]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (10901234, 'Josefina Pino', ARRAY['tarde'], ARRAY[18, 23, 28]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (10912345, 'Felipe Sepúlveda', ARRAY['noche'], ARRAY[19, 24, 29, 34, 39, 44]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (10923456, 'Trinidad Cáceres', ARRAY['mañana', 'tarde'], ARRAY[20, 25, 30]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (10934567, 'Cristian Maldonado', ARRAY['tarde'], ARRAY[21, 26, 31, 36, 41]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (10945678, 'Florencia Olivares', ARRAY['noche'], ARRAY[22, 27, 32]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (10956789, 'Gonzalo Aguilera', ARRAY['mañana'], ARRAY[23, 28, 33, 38, 43, 48]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (10967890, 'Fernanda Peña', ARRAY['tarde', 'noche'], ARRAY[24, 29, 34]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (10978901, 'Samuel Córdova', ARRAY['mañana'], ARRAY[25, 30, 35, 40, 45]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (10989012, 'Daniela Vidal', ARRAY['tarde'], ARRAY[26, 31, 36]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (10990123, 'Martín Salazar', ARRAY['noche'], ARRAY[27, 32, 37, 42, 47, 50]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (10991234, 'Antonia Gallardo', ARRAY['mañana', 'tarde'], ARRAY[28, 33, 38]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (10992345, 'José Miguel Orellana', ARRAY['tarde'], ARRAY[29, 34, 39, 44, 49]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (10993456, 'Esperanza Carvajal', ARRAY['noche'], ARRAY[30, 35, 40]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (10994567, 'Gustavo Poblete', ARRAY['mañana'], ARRAY[1, 11, 21, 31, 41]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (10995678, 'Carolina Bustos', ARRAY['tarde', 'noche'], ARRAY[2, 12, 22]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (10996789, 'Rodrigo Toro', ARRAY['mañana'], ARRAY[3, 13, 23, 33, 43]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (10997890, 'Macarena Ortega', ARRAY['tarde'], ARRAY[4, 14, 24]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (10998901, 'Pablo Aránguiz', ARRAY['noche'], ARRAY[5, 15, 25, 35, 45, 50]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (10999012, 'Bárbara Velásquez', ARRAY['mañana', 'tarde'], ARRAY[6, 16, 26]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (11000123, 'Alonso Pacheco', ARRAY['tarde'], ARRAY[7, 17, 27, 37, 47]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (11001234, 'Francisca Navarrete', ARRAY['noche'], ARRAY[8, 18, 28]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (11012345, 'Matías Arellano', ARRAY['mañana'], ARRAY[9, 19, 29, 39, 49]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (11123456, 'Camila Figueroa', ARRAY['tarde', 'noche'], ARRAY[10, 20, 30]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (11234567, 'Mauricio Escobar', ARRAY['mañana'], ARRAY[11, 21, 31, 41]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (11345678, 'Consuelo Martínez', ARRAY['tarde'], ARRAY[12, 22, 32, 42]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (11456789, 'Sergio Godoy', ARRAY['noche'], ARRAY[13, 23, 33, 43]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (11567890, 'Bernardita Cortés', ARRAY['mañana', 'tarde'], ARRAY[14, 24, 34, 44]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (11678901, 'Patricio Acuña', ARRAY['tarde'], ARRAY[15, 25, 35, 45]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (11789012, 'Catalina Leiva', ARRAY['noche'], ARRAY[16, 26, 36, 46]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (11890123, 'Ignacio Soto', ARRAY['mañana'], ARRAY[17, 27, 37, 47]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (11901234, 'Josefina Venegas', ARRAY['tarde', 'noche'], ARRAY[18, 28, 38, 48]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (11912345, 'Raúl Contreras', ARRAY['mañana'], ARRAY[19, 29, 39, 49]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (11923456, 'Valentina Palma', ARRAY['tarde'], ARRAY[20, 30, 40, 50]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (11934567, 'Felipe Pizarro', ARRAY['noche'], ARRAY[1, 6, 11, 16, 21, 26]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (11945678, 'María José Carrasco', ARRAY['mañana', 'tarde'], ARRAY[2, 7, 12, 17, 22, 27]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (11956789, 'Diego Alarcón', ARRAY['tarde'], ARRAY[3, 8, 13, 18, 23, 28]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (11967890, 'Antonia Garrido', ARRAY['noche'], ARRAY[4, 9, 14, 19, 24, 29]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (11978901, 'Carlos Hernández', ARRAY['mañana'], ARRAY[5, 10, 15, 20, 25, 30]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (11989012, 'María Paz Saavedra', ARRAY['tarde', 'noche'], ARRAY[6, 11, 16, 21, 26, 31]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (11990123, 'Nicolás Muñoz', ARRAY['mañana'], ARRAY[7, 12, 17, 22, 27, 32]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (11991234, 'Gabriela Núñez', ARRAY['tarde'], ARRAY[8, 13, 18, 23, 28, 33]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (11992345, 'Benjamín Toledo', ARRAY['noche'], ARRAY[9, 14, 19, 24, 29, 34]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (11993456, 'Constanza Paredes', ARRAY['mañana', 'tarde'], ARRAY[10, 15, 20, 25, 30, 35]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (11994567, 'Juan Pablo Vargas', ARRAY['tarde'], ARRAY[11, 16, 21, 26, 31, 36]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (11995678, 'Valentina Cárdenas', ARRAY['noche'], ARRAY[12, 17, 22, 27, 32, 37]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (11996789, 'Esteban Pérez', ARRAY['mañana'], ARRAY[13, 18, 23, 28, 33, 38]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (11997890, 'Constanza Reyes', ARRAY['tarde', 'noche'], ARRAY[14, 19, 24, 29, 34, 39]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (11998901, 'Francisco Morales', ARRAY['mañana'], ARRAY[15, 20, 25, 30, 35, 40]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (11999012, 'Camila Rojas', ARRAY['tarde'], ARRAY[16, 21, 26, 31, 36, 41]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (12000123, 'Joaquín Lara', ARRAY['noche'], ARRAY[17, 22, 27, 32, 37, 42]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (12001234, 'Javiera Díaz', ARRAY['mañana', 'tarde'], ARRAY[18, 23, 28, 33, 38, 43]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (12012345, 'Cristóbal López', ARRAY['tarde'], ARRAY[19, 24, 29, 34, 39, 44]);
+INSERT INTO "public"."docentes" ("cc", "nombre", "restricciones", "materias") VALUES (12123456, 'Isidora González', ARRAY['noche'], ARRAY[20, 25, 30, 35, 40, 45]);
+
+
