@@ -1,7 +1,8 @@
 from pydantic import BaseModel
 from typing import List, Optional
 
-class DocenteRequest(BaseModel):
+class DocenteResponse(BaseModel):
+    id: int
     cc: int
     nombre: str
     restricciones: Optional[List[str]] = None
