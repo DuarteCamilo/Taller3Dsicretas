@@ -18,17 +18,8 @@ async def create_docente(
     docente_service = DocenteService(db)
     
     try:
-        # Llamar al servicio para crear el docente
-        new_docente = docente_service.create_docente(docente_request)
-        
-        # Crear respuesta
-        return DocenteResponse(
-            id=new_docente.id,
-            cc=new_docente.cc,
-            nombre=new_docente.nombre,
-            restricciones=new_docente.restricciones,
-            materias=new_docente.materias
-        )
+        # Llamar al servicio para crear el docente y obtener la respuesta
+        return docente_service.create_docente(docente_request)
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
@@ -37,17 +28,7 @@ async def get_docentes(
     db: Session = Depends(get_db)
 ):
     docente_service = DocenteService(db)
-    docentes = docente_service.get_docentes()
-
-    return [
-        DocenteResponse(
-            id=docente.id,
-            cc=docente.cc,
-            nombre=docente.nombre,
-            restricciones=docente.restricciones,
-            materias=docente.materias
-        ) for docente in docentes
-    ]
+    return docente_service.get_docentes()
 
 @router.get("/get-by-id/{docente_id}", response_model=DocenteResponse)
 async def get_docente_by_id(
@@ -60,13 +41,7 @@ async def get_docente_by_id(
     if not docente:
         raise HTTPException(status_code=404, detail=f"Docente con ID {docente_id} no encontrado")
     
-    return DocenteResponse(
-        id=docente.id,
-        cc=docente.cc,
-        nombre=docente.nombre,
-        restricciones=docente.restricciones,
-        materias=docente.materias
-    )
+    return docente
 
 @router.get("/get-by-cc/{cc}", response_model=DocenteResponse)
 async def get_docente_by_cc(
@@ -79,13 +54,7 @@ async def get_docente_by_cc(
     if not docente:
         raise HTTPException(status_code=404, detail=f"Docente con cédula {cc} no encontrado")
     
-    return DocenteResponse(
-        id=docente.id,
-        cc=docente.cc,
-        nombre=docente.nombre,
-        restricciones=docente.restricciones,
-        materias=docente.materias
-    )
+    return docente
 
 @router.put("/update/{docente_id}", response_model=DocenteResponse)
 async def update_docente(
@@ -99,13 +68,7 @@ async def update_docente(
     if not docente:
         raise HTTPException(status_code=404, detail=f"Docente con ID {docente_id} no encontrado")
     
-    return DocenteResponse(
-        id=docente.id,
-        cc=docente.cc,
-        nombre=docente.nombre,
-        restricciones=docente.restricciones,
-        materias=docente.materias
-    )
+    return docente
 
 @router.delete("/delete/{docente_id}", response_model=dict)
 async def delete_docente(

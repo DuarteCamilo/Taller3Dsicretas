@@ -20,15 +20,7 @@ async def create_salon(
     
     try:
         # Llamar al servicio para crear el salón
-        new_salon = salon_service.create_salon(salon_request)
-        
-        # Crear respuesta
-        return SalonResponse(
-            id=new_salon.id,
-            bloque=new_salon.bloque,
-            numero=new_salon.numero,
-            es_sistemas=new_salon.es_sistemas
-        )
+        return salon_service.create_salon(salon_request)
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
@@ -37,16 +29,7 @@ async def get_salones(
     db: Session = Depends(get_db)
 ):
     salon_service = SalonService(db)
-    salones = salon_service.get_salones()
-
-    return [
-        SalonResponse(
-            id=salon.id,
-            bloque=salon.bloque,
-            numero=salon.numero,
-            es_sistemas=salon.es_sistemas
-        ) for salon in salones
-    ]
+    return salon_service.get_salones()
 
 @router.get("/by-bloque", response_model=List[SalonResponse])
 async def get_salones_by_bloque(
@@ -54,16 +37,7 @@ async def get_salones_by_bloque(
     db: Session = Depends(get_db)
 ):
     salon_service = SalonService(db)
-    salones = salon_service.get_salones_by_bloque(bloque)
-
-    return [
-        SalonResponse(
-            id=salon.id,
-            bloque=salon.bloque,
-            numero=salon.numero,
-            es_sistemas=salon.es_sistemas
-        ) for salon in salones
-    ]
+    return salon_service.get_salones_by_bloque(bloque)
 
 @router.get("/get-by-id/{salon_id}", response_model=SalonResponse)
 async def get_salon_by_id(
@@ -76,12 +50,7 @@ async def get_salon_by_id(
     if not salon:
         raise HTTPException(status_code=404, detail=f"Salón con ID {salon_id} no encontrado")
     
-    return SalonResponse(
-        id=salon.id,
-        bloque=salon.bloque,
-        numero=salon.numero,
-        es_sistemas=salon.es_sistemas
-    )
+    return salon
 
 @router.put("/update/{salon_id}", response_model=SalonResponse)
 async def update_salon(
@@ -95,12 +64,7 @@ async def update_salon(
     if not salon:
         raise HTTPException(status_code=404, detail=f"Salón con ID {salon_id} no encontrado")
     
-    return SalonResponse(
-        id=salon.id,
-        bloque=salon.bloque,
-        numero=salon.numero,
-        es_sistemas=salon.es_sistemas
-    )
+    return salon
 
 @router.delete("/delete/{salon_id}", response_model=dict)
 async def delete_salon(

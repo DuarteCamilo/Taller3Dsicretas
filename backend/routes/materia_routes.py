@@ -20,16 +20,7 @@ async def create_materia(
     
     try:
         # Llamar al servicio para crear la materia
-        new_materia = materia_service.create_materia(materia_request)
-        
-        # Crear respuesta
-        return MateriaResponse(
-            id=new_materia.id,
-            codigo=new_materia.codigo,
-            nombre=new_materia.nombre,
-            cantidad_horas=new_materia.cantidad_horas,
-            requiere_sala_sistemas=new_materia.requiere_sala_sistemas
-        )
+        return materia_service.create_materia(materia_request)
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
@@ -38,17 +29,7 @@ async def get_materias(
     db: Session = Depends(get_db)
 ):
     materia_service = MateriaService(db)
-    materias = materia_service.get_materias()
-
-    return [
-        MateriaResponse(
-            id=materia.id,
-            codigo=materia.codigo,
-            nombre=materia.nombre,
-            cantidad_horas=materia.cantidad_horas,
-            requiere_sala_sistemas=materia.requiere_sala_sistemas
-        ) for materia in materias
-    ]
+    return materia_service.get_materias()
 
 @router.get("/by-codigo/{codigo}", response_model=MateriaResponse)
 async def get_materia_by_codigo(
@@ -61,13 +42,7 @@ async def get_materia_by_codigo(
     if not materia:
         raise HTTPException(status_code=404, detail=f"Materia con código {codigo} no encontrada")
     
-    return MateriaResponse(
-        id=materia.id,
-        codigo=materia.codigo,
-        nombre=materia.nombre,
-        cantidad_horas=materia.cantidad_horas,
-        requiere_sala_sistemas=materia.requiere_sala_sistemas
-    )
+    return materia
 
 @router.get("/by-nombre", response_model=List[MateriaResponse])
 async def get_materias_by_nombre(
@@ -75,17 +50,7 @@ async def get_materias_by_nombre(
     db: Session = Depends(get_db)
 ):
     materia_service = MateriaService(db)
-    materias = materia_service.get_materias_by_nombre(nombre)
-
-    return [
-        MateriaResponse(
-            id=materia.id,
-            codigo=materia.codigo,
-            nombre=materia.nombre,
-            cantidad_horas=materia.cantidad_horas,
-            requiere_sala_sistemas=materia.requiere_sala_sistemas
-        ) for materia in materias
-    ]
+    return materia_service.get_materias_by_nombre(nombre)
 
 @router.get("/by-sistemas", response_model=List[MateriaResponse])
 async def get_materias_by_sistemas(
@@ -93,17 +58,7 @@ async def get_materias_by_sistemas(
     db: Session = Depends(get_db)
 ):
     materia_service = MateriaService(db)
-    materias = materia_service.get_materias_by_sistemas(requiere_sistemas)
-
-    return [
-        MateriaResponse(
-            id=materia.id,
-            codigo=materia.codigo,
-            nombre=materia.nombre,
-            cantidad_horas=materia.cantidad_horas,
-            requiere_sala_sistemas=materia.requiere_sala_sistemas
-        ) for materia in materias
-    ]
+    return materia_service.get_materias_by_sistemas(requiere_sistemas)
 
 @router.get("/get-by-id/{materia_id}", response_model=MateriaResponse)
 async def get_materia_by_id(
@@ -116,13 +71,7 @@ async def get_materia_by_id(
     if not materia:
         raise HTTPException(status_code=404, detail=f"Materia con ID {materia_id} no encontrada")
     
-    return MateriaResponse(
-        id=materia.id,
-        codigo=materia.codigo,
-        nombre=materia.nombre,
-        cantidad_horas=materia.cantidad_horas,
-        requiere_sala_sistemas=materia.requiere_sala_sistemas
-    )
+    return materia
 
 @router.put("/update/{materia_id}", response_model=MateriaResponse)
 async def update_materia(
@@ -136,13 +85,7 @@ async def update_materia(
     if not materia:
         raise HTTPException(status_code=404, detail=f"Materia con ID {materia_id} no encontrada")
     
-    return MateriaResponse(
-        id=materia.id,
-        codigo=materia.codigo,
-        nombre=materia.nombre,
-        cantidad_horas=materia.cantidad_horas,
-        requiere_sala_sistemas=materia.requiere_sala_sistemas
-    )
+    return materia
 
 @router.delete("/delete/{materia_id}", response_model=dict)
 async def delete_materia(
