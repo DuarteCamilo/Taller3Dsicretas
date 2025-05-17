@@ -41,7 +41,6 @@ from models.horario_model import Horario
 from models.bloque_model import Bloque
 from models.materia_model import Materia
 from models.salon_model import Salon
-from models.horario_bloque_model import horario_bloque
 
 
 # Dependencia para inyectar la sesión de la base de datos en los endpoints

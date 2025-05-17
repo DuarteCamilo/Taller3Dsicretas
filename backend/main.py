@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from routes.salon_routes import router as salon_routes
 from routes.materia_routes import router as materia_routes
 from routes.docente_routes import router as docente_routes
-import database  
+from routes.main_route import router as main_routes
 
 app = FastAPI(
     title="API Horarios",
@@ -24,6 +24,7 @@ app.add_middleware(
 app.include_router(salon_routes, prefix="/salones", tags=["salones"])
 app.include_router(materia_routes, prefix="/materias", tags=["materias"])
 app.include_router(docente_routes, prefix="/docentes", tags=["docentes"])
+app.include_router(main_routes, prefix="/main", tags=["main"])
 
 
 if __name__ == "__main__":
