@@ -1,9 +1,9 @@
 from pydantic import BaseModel
 from typing import List, Optional
+from schemas.responses.bloque_response import BloqueResponse
 
 class HorarioResponse(BaseModel):
     id: int
     franja: str
-    # Opcionalmente, podríamos incluir listas de IDs de bloques y cursos relacionados
-    bloques_ids: Optional[List[int]] = None
-    cursos_ids: Optional[List[int]] = None
+    # Agregamos el campo bloques para incluir la información completa
+    bloques: Optional[List[BloqueResponse]] = None
