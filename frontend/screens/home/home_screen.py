@@ -196,19 +196,63 @@ class HomeScreen:
         except Exception as e:
             messagebox.showerror("Error", f"Error al abrir la ventana de Docentes: {str(e)}")
             self.root.deiconify()  # Asegurar que la ventana principal se muestre en caso de error
-    
+
     def open_cursos(self):
         """Abre la ventana de gestión de cursos"""
         messagebox.showinfo("Cursos", "Funcionalidad de Cursos en desarrollo")
-    
+
     def open_materias(self):
         """Abre la ventana de gestión de materias"""
-        messagebox.showinfo("Materias", "Funcionalidad de Materias en desarrollo")
-    
+        try:
+            # Importar la clase MateriasScreen
+            from frontend.screens.materias.materias_screen import MateriasScreen
+            
+            # Ocultar la ventana principal (no destruirla)
+            self.root.withdraw()
+            
+            # Crear una nueva ventana Toplevel
+            materias_window = tk.Toplevel()
+            materias_window.title("Gestión de Materias")
+            
+            # Configurar función para cuando se cierre la ventana de materias
+            def on_materias_close():
+                materias_window.destroy()
+                self.root.deiconify()  # Mostrar nuevamente la ventana principal
+                
+            materias_window.protocol("WM_DELETE_WINDOW", on_materias_close)
+            
+            # Inicializar la pantalla de materias con la ventana Toplevel
+            materias_screen = MateriasScreen(materias_window)      
+        except Exception as e:
+            messagebox.showerror("Error", f"Error al abrir la ventana de Materias: {str(e)}")
+            self.root.deiconify()
+
     def open_salones(self):
         """Abre la ventana de gestión de salones"""
-        messagebox.showinfo("Salones", "Funcionalidad de Salones en desarrollo")
-    
+        try:
+            # Importar la clase SalonesScreen
+            from frontend.screens.salones.salones_screen import SalonesScreen
+            
+            # Ocultar la ventana principal (no destruirla)
+            self.root.withdraw()
+            
+            # Crear una nueva ventana Toplevel
+            salones_window = tk.Toplevel()
+            salones_window.title("Gestión de Salones")
+            
+            # Configurar función para cuando se cierre la ventana de salones
+            def on_salones_close():
+                salones_window.destroy()
+                self.root.deiconify()  # Mostrar nuevamente la ventana principal
+                
+            salones_window.protocol("WM_DELETE_WINDOW", on_salones_close)
+            
+            # Inicializar la pantalla de salones con la ventana Toplevel
+            salones_screen = SalonesScreen(salones_window)
+        except Exception as e:
+            messagebox.showerror("Error", f"Error al abrir la ventana de Salones: {str(e)}")
+            self.root.deiconify()
+
     def run(self):
         """Inicia el bucle principal de la aplicación"""
         if self.is_main_window:
