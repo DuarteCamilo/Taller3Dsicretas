@@ -1,6 +1,8 @@
 from typing import List
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session , joinedload
+from models.horario_model import Horario
 from models.curso_model import Curso
+
 
 class CursoRepository:
     def __init__(self, db: Session):
@@ -21,6 +23,22 @@ class CursoRepository:
     def get_all(self):
         """Obtiene todos los cursos."""
         return self.db.query(Curso).all()
+    
+    def get_all_with_relations(self):
+        """Obtiene todos los cursos con sus relaciones cargadas."""
+        return self.db.query(Curso).options(
+            joinedload(Curso.docente),
+            joinedload(Curso.horario).joinedload(Horario.bloques),
+            joinedload(Curso.materia)
+        ).all()
+    
+    def get_by_id_with_relations(self, curso_id: int):
+        """Obtiene un curso por su ID con todas sus relaciones cargadas."""
+        return self.db.query(Curso).options(
+            joinedload(Curso.docente),
+            joinedload(Curso.horario).joinedload(Horario.bloques),
+            joinedload(Curso.materia)
+        ).filter(Curso.id == curso_id).first()
     
     def get_by_codigo(self, codigo: str):
         """Obtiene un curso por su código."""
