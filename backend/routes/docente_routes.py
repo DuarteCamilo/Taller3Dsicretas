@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException, Path, Query
 from sqlalchemy.orm import Session
 from database import get_db
 from schemas.requests.docente_request import DocenteRequest
-from schemas.responses.docente_response import DocenteResponse
+from schemas.responses.docente_response import DocenteResponse, DocenteResponse2
 from services.docente_service import DocenteService
 
 router = APIRouter(tags=["docentes"])
@@ -23,33 +23,33 @@ async def create_docente(
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@router.get("/get-docentes", response_model=List[DocenteResponse])
+@router.get("/get-docentes", response_model=List[DocenteResponse2])
 async def get_docentes(
     db: Session = Depends(get_db)
 ):
     docente_service = DocenteService(db)
-    return docente_service.get_docentes()
+    return docente_service.get_docentes_with_materias()
 
-@router.get("/get-by-id/{docente_id}", response_model=DocenteResponse)
+@router.get("/get-by-id/{docente_id}", response_model=DocenteResponse2)
 async def get_docente_by_id(
     docente_id: int = Path(..., description="ID del docente a obtener"),
     db: Session = Depends(get_db)
 ):
     docente_service = DocenteService(db)
-    docente = docente_service.get_docente_by_id(docente_id)
+    docente = docente_service.get_docente_by_id_with_materias(docente_id)
     
     if not docente:
         raise HTTPException(status_code=404, detail=f"Docente con ID {docente_id} no encontrado")
     
     return docente
 
-@router.get("/get-by-cc/{cc}", response_model=DocenteResponse)
+@router.get("/get-by-cc/{cc}", response_model=DocenteResponse2)
 async def get_docente_by_cc(
     cc: int = Path(..., description="Cédula del docente a obtener"),
     db: Session = Depends(get_db)
 ):
     docente_service = DocenteService(db)
-    docente = docente_service.get_docente_by_cc(cc)
+    docente = docente_service.get_docente_by_cc_with_materias(cc)
     
     if not docente:
         raise HTTPException(status_code=404, detail=f"Docente con cédula {cc} no encontrado")
