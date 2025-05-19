@@ -13,7 +13,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../.
 BASE_URL = "http://localhost:8000/"  # Modificar esta línea según la estructura de tu API
 
 class MateriasScreen:
-    def __init__(self, root=None):
+    def __init__(self, root=None, show_home_callback=None):
         # Si no se proporciona una raíz, crear una nueva ventana
         if root is None:
             self.root = tk.Tk()
@@ -21,6 +21,9 @@ class MateriasScreen:
         else:
             self.root = root
             self.is_main_window = False
+            
+        # Guardar el callback para volver al home
+        self.show_home_callback = show_home_callback
             
         self.root.title("Gestión de Materias")
         self.root.geometry("1000x700")
@@ -230,9 +233,34 @@ class MateriasScreen:
         self.table.bind("<<TreeviewSelect>>", self.on_table_select)
 
     def create_action_buttons(self, parent):
+        # Frame para contener los botones
+        buttons_container = tk.Frame(parent, bg="#f0f0f0")
+        buttons_container.pack(fill=tk.X)
+        
+        # Frame izquierdo para botones de navegación
+        left_buttons = tk.Frame(buttons_container, bg="#f0f0f0")
+        left_buttons.pack(side=tk.LEFT)
+        
+        # Frame derecho para botones de acción
+        right_buttons = tk.Frame(buttons_container, bg="#f0f0f0")
+        right_buttons.pack(side=tk.RIGHT)
+        
+        # Botón para regresar a la pantalla principal
+        back_button = tk.Button(
+            left_buttons,
+            text="Regresar",
+            command=self.volver_al_home,
+            bg="#607D8B",  # Gris azulado
+            fg="white",
+            font=("Arial", 10),
+            padx=15,
+            pady=8
+        )
+        back_button.pack(side=tk.LEFT, padx=5)
+        
         # Botón para actualizar la lista
         refresh_button = tk.Button(
-            parent,
+            left_buttons,
             text="Actualizar Lista",
             command=self.load_materias,
             bg="#2196F3",
@@ -245,7 +273,7 @@ class MateriasScreen:
         
         # Botón para eliminar materia
         delete_button = tk.Button(
-            parent,
+            right_buttons,
             text="Eliminar Materia",
             command=self.delete_materia,
             bg="#f44336",
@@ -258,7 +286,7 @@ class MateriasScreen:
         
         # Botón para guardar materia
         save_button = tk.Button(
-            parent,
+            right_buttons,
             text="Guardar Materia",
             command=self.save_materia,
             bg="#4CAF50",
@@ -268,6 +296,18 @@ class MateriasScreen:
             pady=8
         )
         save_button.pack(side=tk.RIGHT, padx=5)
+
+    def volver_al_home(self):
+        """Utiliza el callback para volver a la pantalla principal"""
+        if self.show_home_callback:
+            self.show_home_callback()
+        else:
+            self.return_to_home()
+    
+    def return_to_home(self):
+        """Cierra la ventana actual y regresa a la pantalla principal"""
+        if not self.is_main_window:
+            self.root.destroy()  # Esto activará el protocolo WM_DELETE_WINDOW
 
     def load_materias(self):
         """Carga todas las materias desde el backend"""
