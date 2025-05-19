@@ -43,11 +43,9 @@ class CursosScreen:
         self.cursos = []
         self.docentes = {}  # Diccionario para mapear nombres a cédulas
         
-        # Configurar el estilo de la ventana
         self.setup_ui()
-        
-        # Cargar datos iniciales
         self.load_cursos()
+        self.center_window()
         
     def setup_ui(self):
         # Frame principal
@@ -513,6 +511,14 @@ class CursosScreen:
             if cursos_encontrados == 0:
                 messagebox.showinfo("Información", f"No se encontraron horarios para el curso {curso_seleccionado}")
     
+    def center_window(self):
+        self.root.update_idletasks()
+        width = self.root.winfo_width()
+        height = self.root.winfo_height()
+        x = (self.root.winfo_screenwidth() // 2) - (width // 2)
+        y = (self.root.winfo_screenheight() // 2) - (height // 2)
+        self.root.geometry(f'+{x}+{y}')
+        
     def run(self):
         """Inicia el bucle principal de la aplicación"""
         if self.is_main_window:
