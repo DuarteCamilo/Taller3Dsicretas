@@ -61,7 +61,7 @@ class HomeScreen:
         button_padx = 20
         button_pady = 15
         
-        # Crear botones (eliminamos el botón de Horarios)
+        # Crear botones
         docentes_button = self.create_button(
             buttons_frame, 
             "Docentes", 
@@ -74,7 +74,7 @@ class HomeScreen:
         
         cursos_button = self.create_button(
             buttons_frame, 
-            "Cursos", 
+            "Ver Cursos", 
             "#FF9800",  # Naranja
             self.open_cursos,
             button_font,
@@ -102,15 +102,28 @@ class HomeScreen:
             button_height
         )
         
-        # Organizar botones en grid (2 columnas)
+        # Nuevo botón para Horarios
+        horarios_button = self.create_button(
+            buttons_frame, 
+            "Generar Cursos", 
+            "#009688",  # Verde azulado
+            self.open_horarios,
+            button_font,
+            button_width,
+            button_height
+        )
+        
+        # Organizar botones en grid (3 columnas, 2 filas)
         docentes_button.grid(row=0, column=0, padx=button_padx, pady=button_pady)
         cursos_button.grid(row=0, column=1, padx=button_padx, pady=button_pady)
-        materias_button.grid(row=1, column=0, padx=button_padx, pady=button_pady)
-        salones_button.grid(row=1, column=1, padx=button_padx, pady=button_pady)
+        materias_button.grid(row=0, column=2, padx=button_padx, pady=button_pady)
+        salones_button.grid(row=1, column=0, padx=button_padx, pady=button_pady)
+        horarios_button.grid(row=1, column=1, padx=button_padx, pady=button_pady)
         
         # Configurar el grid para centrar los botones
         buttons_frame.grid_columnconfigure(0, weight=1)
         buttons_frame.grid_columnconfigure(1, weight=1)
+        buttons_frame.grid_columnconfigure(2, weight=1)
         
         # Pie de página
         footer_label = tk.Label(
@@ -157,7 +170,35 @@ class HomeScreen:
     
     def open_horarios(self):
         """Abre la ventana de gestión de horarios"""
-        messagebox.showinfo("Horarios", "Funcionalidad de Horarios en desarrollo")
+        try:
+            # Importar la clase HorariosScreen
+            from frontend.screens.horarios.horarios_screen import HorariosScreen
+            
+            # Ocultar la ventana principal (no destruirla)
+            self.root.withdraw()
+            
+            # Crear una nueva ventana Toplevel
+            horarios_window = tk.Toplevel()
+            horarios_window.title("Gestión de Horarios")
+            
+            # Función para mostrar la pantalla de inicio cuando se cierra la ventana de horarios
+            def mostrar_home():
+                # Código para mostrar la pantalla de inicio
+                horarios_window.destroy()
+                self.root.deiconify()  # Mostrar nuevamente la ventana principal
+            
+            # Configurar función para cuando se cierre la ventana de horarios
+            def on_horarios_close():
+                horarios_window.destroy()
+                self.root.deiconify()  # Mostrar nuevamente la ventana principal
+                
+            horarios_window.protocol("WM_DELETE_WINDOW", on_horarios_close)
+            
+            # Inicializar la pantalla de horarios con la ventana Toplevel y el callback
+            horarios_screen = HorariosScreen(horarios_window, show_home_callback=mostrar_home)
+        except Exception as e:
+            messagebox.showerror("Error", f"Error al abrir la ventana de Horarios: {str(e)}")
+            self.root.deiconify()  # Asegurar que la ventana principal se muestre en caso de error
     
     def open_docentes(self):
         """Abre la ventana de gestión de docentes"""
@@ -194,6 +235,32 @@ class HomeScreen:
     def open_cursos(self):
         """Abre la ventana de gestión de cursos"""
         try:
+            # Verificar primero si hay cursos
+            import requests
+            
+            # URL base para las peticiones al backend
+            BASE_URL = "http://localhost:8000/"
+            
+            try:
+                # Realizar petición al backend para obtener cursos
+                response = requests.get(f"{BASE_URL}cursos/detallados")
+                
+                # Verificar si hay cursos
+                if response.status_code == 200:
+                    cursos = response.json()
+                    if not cursos or len(cursos) == 0:
+                        # No hay cursos, mostrar mensaje y abrir ventana de horarios
+                        messagebox.showinfo("Información", "No hay cursos disponibles. Se abrirá la ventana de horarios.")
+                        self.open_horarios()
+                        return
+                else:
+                    # Error al obtener cursos, mostrar mensaje y continuar normalmente
+                    messagebox.showwarning("Advertencia", "No se pudieron verificar los cursos. Se abrirá la ventana de cursos normalmente.")
+            except Exception as e:
+                # Error de conexión, mostrar mensaje y continuar normalmente
+                messagebox.showwarning("Error de Conexión", f"No se pudo conectar al servidor: {str(e)}. Se abrirá la ventana de cursos normalmente.")
+            
+            # Si hay cursos o hubo un error, continuar con la apertura normal de la ventana de cursos
             # Importar la clase CursosScreen
             from frontend.screens.cursos.cursos_screen import CursosScreen
             
