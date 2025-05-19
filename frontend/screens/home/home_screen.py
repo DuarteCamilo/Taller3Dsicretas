@@ -244,7 +244,7 @@ class HomeScreen:
         # Pie de página con copyright
         footer_label = tk.Label(
             status_frame,
-            text="© 2023 Sistema de Gestión Académica - EAM",
+            text="© 2025 Sistema de Gestión Académica - EAM",
             font=("Helvetica", 10),
             bg=self.theme["background"],
             fg=self.theme["text_muted"]

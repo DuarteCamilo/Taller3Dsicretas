@@ -102,7 +102,7 @@ class MateriasScreen:
         # Pie de página
         footer_label = tk.Label(
             main_frame,
-            text="© 2023 Sistema de Gestión Académica - EAM",
+            text="© 2025 Sistema de Gestión Académica - EAM",
             font=("Arial", 10),
             bg="#f0f0f0",
             fg="#888888"
