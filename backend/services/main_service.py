@@ -178,6 +178,9 @@ class MainService:
             horarios_creados = []
             bloques_creados = []
             
+            # Crear un diccionario para rastrear qué docentes han sido asignados a cada materia
+            docentes_asignados_por_materia = {}
+            
             # Procesar cada materia
             for materia in materias:
                 # Determinar cuántos bloques necesita esta materia
@@ -212,6 +215,7 @@ class MainService:
                 
                 # Inicializar seguimiento de franjas para esta materia
                 franjas_por_materia[materia.id] = set()
+                docentes_asignados_por_materia[materia.id] = set()
                 
                 # Clasificar docentes por franja disponible
                 docentes_diurnos = []
@@ -261,12 +265,24 @@ class MainService:
                     if plantilla_nocturna:
                         plantillas_bloques_por_materia[materia.id]["Nocturna"] = plantilla_nocturna
                 
+                # Ordenar docentes por cantidad de cursos asignados (priorizar los que tienen menos)
+                docentes_diurnos.sort(key=lambda d: len(asignaciones_docentes[d.id]))
+                docentes_nocturnos.sort(key=lambda d: len(asignaciones_docentes[d.id]))
+                
                 # Intentar asignar cursos en franja Diurna
                 if "Diurna" in plantillas_bloques_por_materia[materia.id] and docentes_diurnos:
                     for docente in docentes_diurnos:
                         # Verificar si el docente ya tiene 6 cursos
                         if len(asignaciones_docentes[docente.id]) >= 6:
                             continue
+                        
+                        # Si ya hay un docente asignado a esta materia en esta franja, 
+                        # y hay otros docentes disponibles que aún no tienen cursos, priorizar a esos
+                        if "Diurna" in franjas_por_materia[materia.id] and docente.id in docentes_asignados_por_materia[materia.id]:
+                            # Verificar si hay otros docentes disponibles que aún no tienen esta materia
+                            otros_docentes = [d for d in docentes_diurnos if d.id != docente.id and d.id not in docentes_asignados_por_materia[materia.id]]
+                            if otros_docentes:
+                                continue  # Saltar este docente y probar con otro
                         
                         # Crear un nuevo horario para este docente y materia en franja Diurna
                         nuevo_horario = self.horario_repository.create({"franja": "Diurna"})
@@ -321,6 +337,7 @@ class MainService:
                         cursos_creados.append(nuevo_curso)
                         asignaciones_docentes[docente.id].append(nuevo_curso.id)
                         franjas_por_materia[materia.id].add("Diurna")
+                        docentes_asignados_por_materia[materia.id].add(docente.id)
                         break  # Solo necesitamos un curso por franja
                 
                 # Intentar asignar cursos en franja Nocturna
@@ -329,6 +346,14 @@ class MainService:
                         # Verificar si el docente ya tiene 6 cursos
                         if len(asignaciones_docentes[docente.id]) >= 6:
                             continue
+                        
+                        # Si ya hay un docente asignado a esta materia en esta franja, 
+                        # y hay otros docentes disponibles que aún no tienen cursos, priorizar a esos
+                        if "Nocturna" in franjas_por_materia[materia.id] and docente.id in docentes_asignados_por_materia[materia.id]:
+                            # Verificar si hay otros docentes disponibles que aún no tienen esta materia
+                            otros_docentes = [d for d in docentes_nocturnos if d.id != docente.id and d.id not in docentes_asignados_por_materia[materia.id]]
+                            if otros_docentes:
+                                continue  # Saltar este docente y probar con otro
                         
                         # Crear un nuevo horario para este docente y materia en franja Nocturna
                         nuevo_horario = self.horario_repository.create({"franja": "Nocturna"})
@@ -383,6 +408,7 @@ class MainService:
                         cursos_creados.append(nuevo_curso)
                         asignaciones_docentes[docente.id].append(nuevo_curso.id)
                         franjas_por_materia[materia.id].add("Nocturna")
+                        docentes_asignados_por_materia[materia.id].add(docente.id)
                         break  # Solo necesitamos un curso por franja
             
             # Verificar si se generaron cursos para todas las materias impartibles
@@ -396,94 +422,77 @@ class MainService:
             # Calcular porcentaje de cobertura
             porcentaje_cobertura = (len(materias_con_cursos) / len(materias_impartibles_ids)) * 100 if materias_impartibles_ids else 0
             
+            # Verificar docentes sin cursos asignados
+            docentes_sin_cursos = [docente for docente in docentes if not asignaciones_docentes[docente.id]]
+            
             print("\n===== VERIFICACIÓN DE COBERTURA DE MATERIAS =====")
             print(f"Total de materias impartibles: {len(materias_impartibles_ids)}")
-            print(f"Materias con cursos asignados: {len(materias_con_cursos)}")
+            print(f"Materias con cursos asignados: {len(materias_con_cursos)} ({porcentaje_cobertura:.2f}%)")
             print(f"Materias sin cursos asignados: {len(materias_sin_cursos)}")
-            print(f"Porcentaje de cobertura: {porcentaje_cobertura:.2f}%")
             
-            if materias_sin_cursos:
-                print("\nMaterias impartibles sin cursos asignados:")
-                for materia_id in materias_sin_cursos:
-                    materia = next((m for m in materias if m.id == materia_id), None)
-                    if materia:
-                        print(f"- ID: {materia.id}, Código: {materia.codigo}, Nombre: {materia.nombre}")
+            print("\n===== VERIFICACIÓN DE ASIGNACIÓN DE DOCENTES =====")
+            print(f"Total de docentes: {len(docentes)}")
+            print(f"Docentes con al menos un curso: {len(docentes) - len(docentes_sin_cursos)}")
+            print(f"Docentes sin cursos asignados: {len(docentes_sin_cursos)}")
+            if docentes_sin_cursos:
+                print("Nombres de docentes sin cursos:")
+                for docente in docentes_sin_cursos:
+                    print(f"- {docente.nombre}")
             
-            # Verificar cobertura de franjas por materia
-            print("\n===== VERIFICACIÓN DE COBERTURA DE FRANJAS =====")
-            materias_con_ambas_franjas = 0
-            materias_solo_diurna = 0
-            materias_solo_nocturna = 0
-            
-            for materia_id, franjas in franjas_por_materia.items():
-                materia = next((m for m in materias if m.id == materia_id), None)
-                if materia:
-                    if "Diurna" in franjas and "Nocturna" in franjas:
-                        materias_con_ambas_franjas += 1
-                        print(f"- ID: {materia.id}, Código: {materia.codigo}, Nombre: {materia.nombre}")
-                        print(f"  Tiene cursos en ambas franjas: Diurna y Nocturna")
-                    elif "Diurna" in franjas:
-                        materias_solo_diurna += 1
-                        print(f"- ID: {materia.id}, Código: {materia.codigo}, Nombre: {materia.nombre}")
-                        print(f"  Tiene cursos solo en franja: Diurna")
-                    elif "Nocturna" in franjas:
-                        materias_solo_nocturna += 1
-                        print(f"- ID: {materia.id}, Código: {materia.codigo}, Nombre: {materia.nombre}")
-                        print(f"  Tiene cursos solo en franja: Nocturna")
-            
-            print(f"\nMaterias con cursos en ambas franjas: {materias_con_ambas_franjas}")
-            print(f"Materias con cursos solo en franja Diurna: {materias_solo_diurna}")
-            print(f"Materias con cursos solo en franja Nocturna: {materias_solo_nocturna}")
-            print("===========================================\n")
-            
+            # Retornar resultado
             return {
                 "exito": True,
                 "mensaje": "Horarios generados con éxito",
-                "cursos_creados": len(cursos_creados),
-                "horarios_creados": len(horarios_creados),
-                "bloques_creados": len(bloques_creados),
-                "materias_impartibles": len(materias_impartibles),
-                "materias_con_cursos": len(materias_con_cursos),
-                "materias_sin_cursos": len(materias_sin_cursos),
-                "porcentaje_cobertura": round(porcentaje_cobertura, 2),
-                "materias_con_ambas_franjas": materias_con_ambas_franjas,
-                "materias_solo_diurna": materias_solo_diurna,
-                "materias_solo_nocturna": materias_solo_nocturna
+                "detalles": {
+                    "cursos_creados": len(cursos_creados),
+                    "horarios_creados": len(horarios_creados),
+                    "bloques_creados": len(bloques_creados),
+                    "materias_con_cursos": len(materias_con_cursos),
+                    "materias_sin_cursos": len(materias_sin_cursos),
+                    "porcentaje_cobertura": porcentaje_cobertura,
+                    "docentes_sin_cursos": len(docentes_sin_cursos)
+                }
             }
             
         except Exception as e:
+            print(f"Error al generar horarios: {str(e)}")
             return {
                 "exito": False,
                 "mensaje": f"Error al generar horarios: {str(e)}"
             }
-
+    
     def _crear_plantilla_bloques(self, bloques_necesarios, dias_semana, franjas_horarias):
         """
-        Crea una plantilla de bloques (días y horas) para una materia.
+        Crea una plantilla de bloques para una materia.
         
         Args:
-            bloques_necesarios: Lista con la duración de cada bloque necesario
-            dias_semana: Lista de días disponibles
-            franjas_horarias: Lista de franjas horarias disponibles
+            bloques_necesarios: Lista con la duración de cada bloque necesario (en horas).
+            dias_semana: Lista de días disponibles.
+            franjas_horarias: Lista de tuplas (hora_inicio, hora_fin) disponibles.
             
         Returns:
-            List: Lista de diccionarios con día, hora_inicio y hora_fin
+            List: Lista de diccionarios con la información de cada bloque.
         """
-        plantilla = []
-        dias_disponibles = dias_semana.copy()
-        random.shuffle(dias_disponibles)
+        # Si no hay suficientes bloques disponibles, retornar None
+        if len(bloques_necesarios) > len(dias_semana):
+            return None
         
-        for duracion in bloques_necesarios:
-            if not dias_disponibles:
-                return []  # No hay más días disponibles
-                
-            dia = dias_disponibles.pop(0)  # Tomar un día aleatorio
+        # Seleccionar días aleatorios para los bloques
+        dias_seleccionados = random.sample(dias_semana, len(bloques_necesarios))
+        
+        # Crear la plantilla de bloques
+        plantilla = []
+        for i, duracion in enumerate(bloques_necesarios):
+            dia = dias_seleccionados[i]
             
-            # Encontrar una franja horaria adecuada
+            # Filtrar franjas horarias que coincidan con la duración del bloque
             franjas_adecuadas = [f for f in franjas_horarias if f[1] - f[0] == duracion]
+            
             if not franjas_adecuadas:
-                # Si no hay franjas exactas, usar la primera disponible
-                franja = franjas_horarias[0]
+                # Si no hay franjas exactas, tomar cualquiera (esto podría mejorarse)
+                if not franjas_horarias:
+                    return None
+                franja = random.choice(franjas_horarias)
             else:
                 franja = random.choice(franjas_adecuadas)
             
@@ -494,43 +503,47 @@ class MainService:
             })
         
         return plantilla
-
-    def _asignar_bloques_con_plantilla(self, horario_id, plantilla_bloques, salones_disponibles, bloques_ocupados):
+    
+    def _asignar_bloques_con_plantilla(self, horario_id, plantilla, salones_disponibles, bloques_ocupados):
         """
-        Asigna bloques a un horario siguiendo una plantilla pero con salones diferentes.
+        Asigna bloques a un horario usando una plantilla predefinida.
         
         Args:
-            horario_id: ID del horario al que se asignarán los bloques
-            plantilla_bloques: Lista de diccionarios con día, hora_inicio y hora_fin
-            salones_disponibles: Lista de salones disponibles
-            bloques_ocupados: Diccionario para seguimiento de bloques ocupados
+            horario_id: ID del horario al que se asignarán los bloques.
+            plantilla: Lista de diccionarios con la información de cada bloque.
+            salones_disponibles: Lista de salones disponibles.
+            bloques_ocupados: Diccionario para seguimiento de bloques ocupados.
             
         Returns:
-            List: Lista de bloques creados
+            List: Lista de bloques creados.
         """
         bloques_creados = []
         
-        for plantilla in plantilla_bloques:
-            dia = plantilla["dia"]
-            hora_inicio = plantilla["horaInicio"]
-            hora_fin = plantilla["horaFin"]
+        for info_bloque in plantilla:
+            dia = info_bloque["dia"]
+            hora_inicio = info_bloque["horaInicio"]
+            hora_fin = info_bloque["horaFin"]
             
             # Buscar un salón disponible para este bloque
             salon_asignado = None
             for salon in salones_disponibles:
-                # Clave para verificar si el salón está ocupado en este horario
-                clave_ocupacion = f"{dia}_{hora_inicio}_{hora_fin}_{salon.id}"
+                # Crear una clave única para este bloque de tiempo y salón
+                clave_bloque = f"{dia}_{hora_inicio}_{hora_fin}_{salon.id}"
                 
-                if clave_ocupacion not in bloques_ocupados:
+                # Verificar si este bloque ya está ocupado
+                if clave_bloque not in bloques_ocupados:
                     salon_asignado = salon
-                    bloques_ocupados[clave_ocupacion] = True
+                    bloques_ocupados[clave_bloque] = True
                     break
             
             if not salon_asignado:
-                # No se encontró un salón disponible para este bloque
+                # Si no se encontró un salón disponible, no se puede asignar este bloque
+                # Eliminar los bloques ya creados y retornar None
+                for bloque in bloques_creados:
+                    self.bloque_repository.delete(bloque.id)
                 return []
             
-            # Crear el bloque con el salón asignado
+            # Crear el bloque
             nuevo_bloque = self.bloque_repository.create({
                 "dia": dia,
                 "horaInicio": hora_inicio,

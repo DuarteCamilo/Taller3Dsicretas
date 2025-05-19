@@ -2,6 +2,8 @@ import tkinter as tk
 from tkinter import messagebox
 import requests
 import threading
+from frontend.screens.home.home_screen import HomeScreen
+from frontend.screens.cursos.cursos_screen import CursosScreen
 
 class APIClientApp:
     def __init__(self, root):
@@ -114,5 +116,20 @@ class APIClientApp:
 
 if __name__ == "__main__":
     root = tk.Tk()
-    app = APIClientApp(root)
+    
+    # Función para mostrar la pantalla de inicio
+    def mostrar_home():
+        # Limpiar la ventana actual
+        for widget in root.winfo_children():
+            widget.destroy()
+        
+        # Mostrar la pantalla de inicio
+        home_screen = HomeScreen(root)
+    
+    # Inicialmente mostrar la pantalla de inicio
+    home_screen = HomeScreen(root)
+    
+    # Para cuando quieras abrir la pantalla de cursos:
+    # cursos_screen = CursosScreen(root, show_home_callback=mostrar_home)
+    
     root.mainloop()

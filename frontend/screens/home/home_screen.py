@@ -61,17 +61,7 @@ class HomeScreen:
         button_padx = 20
         button_pady = 15
         
-        # Crear botones
-        horarios_button = self.create_button(
-            buttons_frame, 
-            "Horarios", 
-            "#4CAF50",  # Verde
-            self.open_horarios,
-            button_font,
-            button_width,
-            button_height
-        )
-        
+        # Crear botones (eliminamos el botón de Horarios)
         docentes_button = self.create_button(
             buttons_frame, 
             "Docentes", 
@@ -112,17 +102,15 @@ class HomeScreen:
             button_height
         )
         
-        # Organizar botones en grid (3 columnas)
-        horarios_button.grid(row=0, column=0, padx=button_padx, pady=button_pady)
-        docentes_button.grid(row=0, column=1, padx=button_padx, pady=button_pady)
-        cursos_button.grid(row=0, column=2, padx=button_padx, pady=button_pady)
+        # Organizar botones en grid (2 columnas)
+        docentes_button.grid(row=0, column=0, padx=button_padx, pady=button_pady)
+        cursos_button.grid(row=0, column=1, padx=button_padx, pady=button_pady)
         materias_button.grid(row=1, column=0, padx=button_padx, pady=button_pady)
         salones_button.grid(row=1, column=1, padx=button_padx, pady=button_pady)
         
         # Configurar el grid para centrar los botones
         buttons_frame.grid_columnconfigure(0, weight=1)
         buttons_frame.grid_columnconfigure(1, weight=1)
-        buttons_frame.grid_columnconfigure(2, weight=1)
         
         # Pie de página
         footer_label = tk.Label(
@@ -184,6 +172,12 @@ class HomeScreen:
             docentes_window = tk.Toplevel()
             docentes_window.title("Gestión de Docentes")
             
+            # Función para mostrar la pantalla de inicio cuando se cierra la ventana de docentes
+            def mostrar_home():
+                # Código para mostrar la pantalla de inicio
+                docentes_window.destroy()
+                self.root.deiconify()  # Mostrar nuevamente la ventana principal
+            
             # Configurar función para cuando se cierre la ventana de docentes
             def on_docentes_close():
                 docentes_window.destroy()
@@ -191,15 +185,43 @@ class HomeScreen:
                 
             docentes_window.protocol("WM_DELETE_WINDOW", on_docentes_close)
             
-            # Inicializar la pantalla de docentes con la ventana Toplevel
-            docentes_screen = DocentesScreen(docentes_window)
+            # Inicializar la pantalla de docentes con la ventana Toplevel y el callback
+            docentes_screen = DocentesScreen(docentes_window, show_home_callback=mostrar_home)
         except Exception as e:
             messagebox.showerror("Error", f"Error al abrir la ventana de Docentes: {str(e)}")
             self.root.deiconify()  # Asegurar que la ventana principal se muestre en caso de error
 
     def open_cursos(self):
         """Abre la ventana de gestión de cursos"""
-        messagebox.showinfo("Cursos", "Funcionalidad de Cursos en desarrollo")
+        try:
+            # Importar la clase CursosScreen
+            from frontend.screens.cursos.cursos_screen import CursosScreen
+            
+            # Ocultar la ventana principal (no destruirla)
+            self.root.withdraw()
+            
+            # Crear una nueva ventana Toplevel
+            cursos_window = tk.Toplevel()
+            cursos_window.title("Gestión de Cursos")
+            
+            # Función para mostrar la pantalla de inicio cuando se cierra la ventana de cursos
+            def mostrar_home():
+                # Código para mostrar la pantalla de inicio
+                cursos_window.destroy()
+                self.root.deiconify()  # Mostrar nuevamente la ventana principal
+            
+            # Configurar función para cuando se cierre la ventana de cursos
+            def on_cursos_close():
+                cursos_window.destroy()
+                self.root.deiconify()  # Mostrar nuevamente la ventana principal
+                
+            cursos_window.protocol("WM_DELETE_WINDOW", on_cursos_close)
+            
+            # Inicializar la pantalla de cursos con la ventana Toplevel y el callback
+            cursos_screen = CursosScreen(cursos_window, show_home_callback=mostrar_home)
+        except Exception as e:
+            messagebox.showerror("Error", f"Error al abrir la ventana de Cursos: {str(e)}")
+            self.root.deiconify()  # Asegurar que la ventana principal se muestre en caso de error
 
     def open_materias(self):
         """Abre la ventana de gestión de materias"""
@@ -214,6 +236,12 @@ class HomeScreen:
             materias_window = tk.Toplevel()
             materias_window.title("Gestión de Materias")
             
+            # Función para mostrar la pantalla de inicio cuando se cierra la ventana de materias
+            def mostrar_home():
+                # Código para mostrar la pantalla de inicio
+                materias_window.destroy()
+                self.root.deiconify()  # Mostrar nuevamente la ventana principal
+            
             # Configurar función para cuando se cierre la ventana de materias
             def on_materias_close():
                 materias_window.destroy()
@@ -221,8 +249,8 @@ class HomeScreen:
                 
             materias_window.protocol("WM_DELETE_WINDOW", on_materias_close)
             
-            # Inicializar la pantalla de materias con la ventana Toplevel
-            materias_screen = MateriasScreen(materias_window)      
+            # Inicializar la pantalla de materias con la ventana Toplevel y el callback
+            materias_screen = MateriasScreen(materias_window, show_home_callback=mostrar_home)      
         except Exception as e:
             messagebox.showerror("Error", f"Error al abrir la ventana de Materias: {str(e)}")
             self.root.deiconify()
@@ -240,6 +268,12 @@ class HomeScreen:
             salones_window = tk.Toplevel()
             salones_window.title("Gestión de Salones")
             
+            # Función para mostrar la pantalla de inicio cuando se cierra la ventana de salones
+            def mostrar_home():
+                # Código para mostrar la pantalla de inicio
+                salones_window.destroy()
+                self.root.deiconify()  # Mostrar nuevamente la ventana principal
+            
             # Configurar función para cuando se cierre la ventana de salones
             def on_salones_close():
                 salones_window.destroy()
@@ -247,8 +281,8 @@ class HomeScreen:
                 
             salones_window.protocol("WM_DELETE_WINDOW", on_salones_close)
             
-            # Inicializar la pantalla de salones con la ventana Toplevel
-            salones_screen = SalonesScreen(salones_window)
+            # Inicializar la pantalla de salones con la ventana Toplevel y el callback
+            salones_screen = SalonesScreen(salones_window, show_home_callback=mostrar_home)
         except Exception as e:
             messagebox.showerror("Error", f"Error al abrir la ventana de Salones: {str(e)}")
             self.root.deiconify()
