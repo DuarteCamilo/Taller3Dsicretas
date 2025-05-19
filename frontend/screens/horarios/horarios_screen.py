@@ -12,7 +12,6 @@ BASE_URL = "http://localhost:8000/"
 
 class HorariosScreen:
     def __init__(self, root=None, show_home_callback=None):
-        # Si no se proporciona una raíz, crear una nueva ventana
         if root is None:
             self.root = tk.Tk()
             self.is_main_window = True
@@ -20,246 +19,320 @@ class HorariosScreen:
             self.root = root
             self.is_main_window = False
             
-        # Guardar el callback para volver al home
         self.show_home_callback = show_home_callback
-            
-        self.root.title("Gestión de Horarios")
-        self.root.geometry("600x400")
-        self.root.configure(bg="#f0f0f0")
-        
-        # Variable para controlar si hay cursos generados
         self.hay_cursos = False
         
-        # Configurar el estilo de la ventana
-        self.setup_ui()
+        # Tema de colores coincidente con home_screen
+        self.theme = {
+            "primary": "#2563eb",
+            "secondary": "#374151",
+            "background": "#f8fafc",
+            "accent": "#7c3aed",
+            "success": "#10b981",
+            "warning": "#f59e0b",
+            "danger": "#ef4444",
+            "text_dark": "#1e293b",
+            "text_light": "#f1f5f9",
+            "text_muted": "#64748b"
+        }
         
-        # Verificar si hay cursos generados
+        self.root.title("Gestión de Horarios")
+        self.root.geometry("1000x500")
+        self.root.minsize(900, 350)
+        self.root.configure(bg=self.theme["background"])
+        
+
+        self.setup_ui()
+        self.setup_button_effects()
         self.verificar_cursos()
+        self.center_window()
+
         
     def setup_ui(self):
-        # Frame principal
-        main_frame = tk.Frame(self.root, bg="#f0f0f0", padx=30, pady=30)
-        main_frame.pack(fill=tk.BOTH, expand=True)
+        # Contenedor principal
+        main_container = tk.Frame(self.root, bg=self.theme["background"], padx=40, pady=30)
+        main_container.pack(fill=tk.BOTH, expand=True)
         
-        # Título
-        title_font = font.Font(family="Arial", size=20, weight="bold")
+        # Encabezado
+        header_frame = tk.Frame(main_container, bg=self.theme["background"])
+        header_frame.pack(fill=tk.X, pady=(0, 30))
+        
+        # Logo
+        logo_frame = tk.Frame(header_frame, width=80, height=80, bg=self.theme["primary"])
+        logo_frame.pack(side=tk.LEFT, padx=(0, 20))
+        logo_frame.pack_propagate(False)
+        
+        logo_text = tk.Label(logo_frame, text="EAM", font=("Arial", 24, "bold"), 
+                           fg="white", bg=self.theme["primary"])
+        logo_text.place(relx=0.5, rely=0.5, anchor="center")
+        
+        # Títulos
+        title_frame = tk.Frame(header_frame, bg=self.theme["background"])
+        title_frame.pack(side=tk.LEFT)
+        
+        title_font = font.Font(family="Helvetica", size=28, weight="bold")
         title_label = tk.Label(
-            main_frame, 
+            title_frame, 
             text="Gestión de Horarios Automáticos", 
             font=title_font,
-            bg="#f0f0f0",
-            fg="#333333"
+            bg=self.theme["background"],
+            fg=self.theme["text_dark"]
         )
-        title_label.pack(pady=(0, 30))
+        title_label.pack(anchor=tk.W)
+        
+        subtitle_font = font.Font(family="Helvetica", size=14)
+        subtitle_label = tk.Label(
+            title_frame,
+            text="Generación inteligente de horarios académicos",
+            font=subtitle_font,
+            bg=self.theme["background"],
+            fg=self.theme["text_muted"]
+        )
+        subtitle_label.pack(anchor=tk.W)
+        
+        # Separador
+        separator = tk.Frame(main_container, height=2, bg="#e2e8f0")
+        separator.pack(fill=tk.X, pady=(0, 30))
+        
+        # Panel de contenido
+        content_frame = tk.Frame(main_container, bg=self.theme["background"])
+        content_frame.pack(fill=tk.BOTH, expand=True)
         
         # Descripción
-        description_font = font.Font(family="Arial", size=12)
-        description_text = (
+        desc_font = font.Font(family="Helvetica", size=14)
+        desc_text = (
             "Esta herramienta permite generar horarios automáticamente basados en los docentes, "
-            "materias y salones disponibles en el sistema. También puede eliminar todos los "
-            "horarios generados para comenzar de nuevo."
+            "materias y salones disponibles. También puede eliminar todos los horarios generados."
         )
-        description_label = tk.Label(
-            main_frame,
-            text=description_text,
-            font=description_font,
-            bg="#f0f0f0",
-            fg="#555555",
-            wraplength=500,
+        desc_label = tk.Label(
+            content_frame,
+            text=desc_text,
+            font=desc_font,
+            bg=self.theme["background"],
+            fg=self.theme["text_muted"],
+            wraplength=800,
             justify="center"
         )
-        description_label.pack(pady=(0, 30))
+        desc_label.pack(pady=(0, 20))
         
-        # Frame para los botones
-        buttons_frame = tk.Frame(main_frame, bg="#f0f0f0")
-        buttons_frame.pack(fill=tk.X, expand=True)
+        # Panel de botones
+        buttons_panel = tk.Frame(content_frame, bg=self.theme["background"])
+        buttons_panel.pack(fill=tk.BOTH, expand=True)
         
-        # Botón para regresar
-        back_button = tk.Button(
-            buttons_frame,
-            text="Regresar",
-            command=self.volver_al_home,
-            bg="#607D8B",  # Gris azulado
-            fg="white",
-            font=("Arial", 12),
-            padx=15,
-            pady=8,
-            width=15
-        )
-        back_button.pack(side=tk.LEFT, padx=10)
+        # Configuración de botones
+        self.button_configs = {
+            "Generar Horarios": {
+                "icon": "⏱️",
+                "color": self.theme["success"],
+                "command": self.generar_horarios,
+                "description": "Crea nuevos horarios automáticamente"
+            },
+            "Limpiar Horarios": {
+                "icon": "🗑️",
+                "color": self.theme["danger"],
+                "command": self.limpiar_horarios,
+                "description": "Elimina todos los horarios existentes"
+            }
+        }
         
-        # Botón para generar horarios
-        self.generar_button = tk.Button(
-            buttons_frame,
-            text="Generar Horarios",
-            command=self.generar_horarios,
-            bg="#4CAF50",  # Verde
-            fg="white",
-            font=("Arial", 12),
-            padx=15,
-            pady=8,
-            width=15
-        )
-        self.generar_button.pack(side=tk.RIGHT, padx=10)
+        # Crear botones
+        self.nav_buttons = {}
+        col = 0
+        for btn_text, config in self.button_configs.items():
+            btn_container = tk.Frame(buttons_panel, bg=self.theme["background"], padx=15, pady=15)
+            btn_container.grid(row=0, column=col, sticky="nsew", padx=20, pady=10)
+            btn_container.columnconfigure(0, weight=1)
+            btn_container.rowconfigure(0, weight=1)
+            
+            btn_frame = tk.Frame(
+                btn_container,
+                bg=self.theme["background"],
+                highlightbackground="#e2e8f0",
+                highlightthickness=1,
+                bd=0
+            )
+            btn_frame.grid(row=0, column=0, sticky="nsew")
+            
+            btn = tk.Button(
+                btn_frame,
+                text=f"{config['icon']}  {btn_text}",
+                font=("Helvetica", 14, "bold"),
+                bg="white",
+                fg=config['color'],
+                activebackground=self.lighten_color(config['color'], 0.9),
+                activeforeground="white",
+                bd=0,
+                relief=tk.FLAT,
+                cursor="hand2",
+                command=config['command'],
+                compound=tk.LEFT,
+                padx=15,
+                pady=12,
+                wraplength=300
+            )
+            btn.pack(fill=tk.BOTH, expand=True)
+            
+            desc_label = tk.Label(
+                btn_container,
+                text=config['description'],
+                font=("Helvetica", 11),
+                bg=self.theme["background"],
+                fg=self.theme["text_muted"],
+                wraplength=200
+            )
+            desc_label.grid(row=1, column=0, pady=(5, 0))
+            
+            self.nav_buttons[btn_text] = btn
+            col += 1
         
-        # Botón para limpiar horarios
-        self.limpiar_button = tk.Button(
-            buttons_frame,
-            text="Limpiar Horarios",
-            command=self.limpiar_horarios,
-            bg="#F44336",  # Rojo
-            fg="white",
-            font=("Arial", 12),
-            padx=15,
-            pady=8,
-            width=15
-        )
-        self.limpiar_button.pack(side=tk.RIGHT, padx=10)
-        
-        # Estado de los horarios
-        self.status_frame = tk.Frame(main_frame, bg="#f0f0f0", pady=20)
-        self.status_frame.pack(fill=tk.X, expand=True, pady=20)
+        # Barra de estado
+        status_frame = tk.Frame(main_container, bg=self.theme["background"], pady=10)
+        status_frame.pack(fill=tk.X, side=tk.BOTTOM)
         
         self.status_label = tk.Label(
-            self.status_frame,
-            text="Estado: Verificando si hay horarios generados...",
-            font=("Arial", 12),
-            bg="#f0f0f0",
-            fg="#333333"
+            status_frame,
+            text="Estado: Verificando horarios...",
+            font=("Helvetica", 10),
+            bg=self.theme["background"],
+            fg=self.theme["success"]
         )
-        self.status_label.pack()
+        self.status_label.pack(side=tk.LEFT)
         
-        # Pie de página
-        footer_label = tk.Label(
-            main_frame,
-            text="© 2023 Sistema de Gestión Académica - EAM",
-            font=("Arial", 10),
-            bg="#f0f0f0",
-            fg="#888888"
+        # Botón de regreso
+        back_btn = tk.Button(
+            status_frame,
+            text="← Regresar",
+            command=self.volver_al_home,
+            font=("Helvetica", 10, "bold"),
+            fg=self.theme["primary"],
+            bg=self.theme["background"],
+            activeforeground=self.theme["accent"],
+            bd=0,
+            cursor="hand2"
         )
-        footer_label.pack(side=tk.BOTTOM, pady=(20, 0))
+        back_btn.pack(side=tk.RIGHT)
+        
+        # Ajustar grid
+        buttons_panel.columnconfigure(0, weight=1)
+        buttons_panel.columnconfigure(1, weight=1)
+        
+    def setup_button_effects(self):
+        for btn_text, btn in self.nav_buttons.items():
+            color = self.button_configs[btn_text]["color"]
+            btn.bind("<Enter>", lambda e, b=btn, c=color: self.on_button_hover(b, c))
+            btn.bind("<Leave>", lambda e, b=btn, c=color: self.on_button_leave(b, c))
+            btn.bind("<Button-1>", lambda e, b=btn, c=color: self.on_button_click(b, c))
+            btn.bind("<ButtonRelease-1>", lambda e, b=btn, c=color: self.on_button_release(b, c))
     
+    # Métodos de efectos visuales (iguales que home_screen)
+    def on_button_hover(self, button, color):
+        button.config(bg=color, fg="white")
+        
+    def on_button_leave(self, button, color):
+        button.config(bg="white", fg=color)
+    
+    def on_button_click(self, button, color):
+        darker_color = self.darken_color(color, 0.8)
+        button.config(bg=darker_color, fg="white")
+    
+    def on_button_release(self, button, color):
+        button.config(bg=color, fg="white")
+    
+    def lighten_color(self, hex_color, factor=1.3):
+        hex_color = hex_color.lstrip('#')
+        r, g, b = tuple(int(hex_color[i:i+2], 16) for i in (0, 2, 4))
+        r = min(255, int(r * factor))
+        g = min(255, int(g * factor))
+        b = min(255, int(b * factor))
+        return f"#{r:02x}{g:02x}{b:02x}"
+    
+    def darken_color(self, hex_color, factor=0.7):
+        hex_color = hex_color.lstrip('#')
+        r, g, b = tuple(int(hex_color[i:i+2], 16) for i in (0, 2, 4))
+        r = max(0, int(r * factor))
+        g = max(0, int(g * factor))
+        b = max(0, int(b * factor))
+        return f"#{r:02x}{g:02x}{b:02x}"
+    
+    # Métodos existentes de funcionalidad (sin cambios)
     def verificar_cursos(self):
-        """Verifica si hay cursos generados en el sistema"""
         try:
-            # Realizar petición al backend para obtener cursos
             response = requests.get(f"{BASE_URL}cursos/detallados")
-            
-            # Verificar si hay cursos
             if response.status_code == 200:
                 cursos = response.json()
                 if cursos and len(cursos) > 0:
                     self.hay_cursos = True
-                    self.status_label.config(text="Estado: Hay horarios generados en el sistema")
-                    self.generar_button.config(state=tk.DISABLED)
-                    self.limpiar_button.config(state=tk.NORMAL)
+                    self.status_label.config(text="Estado: Horarios generados ✓", fg=self.theme["success"])
+                    self.nav_buttons["Generar Horarios"].config(state=tk.DISABLED)
+                    self.nav_buttons["Limpiar Horarios"].config(state=tk.NORMAL)
                 else:
                     self.hay_cursos = False
-                    self.status_label.config(text="Estado: No hay horarios generados en el sistema")
-                    self.generar_button.config(state=tk.NORMAL)
-                    self.limpiar_button.config(state=tk.DISABLED)
+                    self.status_label.config(text="Estado: Sin horarios generados", fg=self.theme["text_muted"])
+                    self.nav_buttons["Generar Horarios"].config(state=tk.NORMAL)
+                    self.nav_buttons["Limpiar Horarios"].config(state=tk.DISABLED)
             else:
-                self.status_label.config(text=f"Error al verificar horarios: {response.status_code}")
-                self.hay_cursos = False
-                self.generar_button.config(state=tk.NORMAL)
-                self.limpiar_button.config(state=tk.DISABLED)
+                self.status_label.config(text="Error al verificar horarios", fg=self.theme["danger"])
         except Exception as e:
-            self.status_label.config(text=f"Error de conexión: {str(e)}")
-            messagebox.showerror("Error", f"Error al verificar horarios: {str(e)}")
-            self.hay_cursos = False
-            self.generar_button.config(state=tk.NORMAL)
-            self.limpiar_button.config(state=tk.DISABLED)
+            self.status_label.config(text=f"Error de conexión: {str(e)}", fg=self.theme["danger"])
     
     def generar_horarios(self):
-        """Genera horarios automáticamente"""
         if self.hay_cursos:
-            messagebox.showinfo("Información", "Ya hay horarios generados. Debe limpiarlos primero.")
+            messagebox.showinfo("Información", "Ya existen horarios generados")
             return
         
-        # Confirmar generación
-        if not messagebox.askyesno("Confirmar", "¿Está seguro de generar horarios automáticamente?"):
-            return
-        
-        try:
-            # Realizar petición al backend
-            response = requests.post(f"{BASE_URL}main/generar-horarios")
-            
-            # Verificar respuesta
-            if response.status_code == 200:
-                resultado = response.json()
-                if resultado.get("exito", False):
-                    messagebox.showinfo("Éxito", "Horarios generados correctamente")
+        if messagebox.askyesno("Confirmar", "¿Generar nuevos horarios?"):
+            try:
+                response = requests.post(f"{BASE_URL}main/generar-horarios")
+                if response.status_code == 200:
                     self.hay_cursos = True
-                    self.status_label.config(text="Estado: Hay horarios generados en el sistema")
-                    self.generar_button.config(state=tk.DISABLED)
-                    self.limpiar_button.config(state=tk.NORMAL)
+                    self.status_label.config(text="Horarios generados ✓", fg=self.theme["success"])
+                    self.nav_buttons["Generar Horarios"].config(state=tk.DISABLED)
+                    self.nav_buttons["Limpiar Horarios"].config(state=tk.NORMAL)
+                    messagebox.showinfo("Éxito", "Horarios generados correctamente")
                 else:
-                    messagebox.showerror("Error", f"Error al generar horarios: {resultado.get('mensaje', 'Error desconocido')}")
-            else:
-                # Mostrar mensaje de error
-                try:
-                    error_detail = response.json().get("detail", "")
-                    messagebox.showerror("Error", f"Error al generar horarios: {response.status_code} - {error_detail}")
-                except:
-                    messagebox.showerror("Error", f"Error al generar horarios: {response.status_code} - {response.text}")
-        
-        except requests.exceptions.ConnectionError:
-            messagebox.showerror("Error de Conexión", "No se pudo conectar al servidor. Verifique que el backend esté en ejecución en localhost:8000.")
-        except Exception as e:
-            messagebox.showerror("Error", f"Error inesperado: {str(e)}")
+                    messagebox.showerror("Error", f"Error del servidor: {response.status_code}")
+            except Exception as e:
+                messagebox.showerror("Error", f"Error de conexión: {str(e)}")
     
     def limpiar_horarios(self):
-        """Limpia todos los horarios generados"""
-        if not self.hay_cursos:
-            messagebox.showinfo("Información", "No hay horarios para limpiar.")
-            return
-        
-        # Confirmar eliminación
-        if not messagebox.askyesno("Confirmar", "¿Está seguro de eliminar todos los horarios generados?"):
-            return
-        
-        try:
-            # Realizar petición al backend
-            response = requests.delete(f"{BASE_URL}main/limpiar-horarios")
-            
-            # Verificar respuesta
-            if response.status_code == 200:
-                resultado = response.json()
-                if resultado.get("exito", False):
-                    messagebox.showinfo("Éxito", "Horarios eliminados correctamente")
+        if messagebox.askyesno("Confirmar", "¿Eliminar todos los horarios?"):
+            try:
+                response = requests.delete(f"{BASE_URL}main/limpiar-horarios")
+                if response.status_code == 200:
                     self.hay_cursos = False
-                    self.status_label.config(text="Estado: No hay horarios generados en el sistema")
-                    self.generar_button.config(state=tk.NORMAL)
-                    self.limpiar_button.config(state=tk.DISABLED)
+                    self.status_label.config(text="Horarios eliminados ✓", fg=self.theme["success"])
+                    self.nav_buttons["Generar Horarios"].config(state=tk.NORMAL)
+                    self.nav_buttons["Limpiar Horarios"].config(state=tk.DISABLED)
+                    messagebox.showinfo("Éxito", "Horarios eliminados correctamente")
                 else:
-                    messagebox.showerror("Error", f"Error al limpiar horarios: {resultado.get('mensaje', 'Error desconocido')}")
-            else:
-                # Mostrar mensaje de error
-                try:
-                    error_detail = response.json().get("detail", "")
-                    messagebox.showerror("Error", f"Error al limpiar horarios: {response.status_code} - {error_detail}")
-                except:
-                    messagebox.showerror("Error", f"Error al limpiar horarios: {response.status_code} - {response.text}")
-        
-        except requests.exceptions.ConnectionError:
-            messagebox.showerror("Error de Conexión", "No se pudo conectar al servidor. Verifique que el backend esté en ejecución en localhost:8000.")
-        except Exception as e:
-            messagebox.showerror("Error", f"Error inesperado: {str(e)}")
+                    messagebox.showerror("Error", f"Error del servidor: {response.status_code}")
+            except Exception as e:
+                messagebox.showerror("Error", f"Error de conexión: {str(e)}")
     
+    def center_window(self):
+        # Actualizar tareas pendientes para asegurar dimensiones correctas
+        self.root.update_idletasks()
+        
+        # Obtener dimensiones de la ventana y la pantalla
+        width = self.root.winfo_width()
+        height = self.root.winfo_height()
+        screen_width = self.root.winfo_screenwidth()
+        screen_height = self.root.winfo_screenheight()
+        
+        # Calcular posición x e y para centrar
+        x = (screen_width // 2) - (width // 2)
+        y = (screen_height // 2) - (height // 2)
+        
+        # Aplicar nueva geometría
+        self.root.geometry(f'+{x}+{y}')
+        
     def volver_al_home(self):
-        """Utiliza el callback para volver a la pantalla principal"""
         if self.show_home_callback:
             self.show_home_callback()
         else:
-            self.return_to_home()
-    
-    def return_to_home(self):
-        """Cierra la ventana actual y regresa a la pantalla principal"""
-        if not self.is_main_window:
-            self.root.destroy()  # Esto activará el protocolo WM_DELETE_WINDOW
+            self.root.destroy()
     
     def run(self):
-        """Inicia el bucle principal de la aplicación"""
         if self.is_main_window:
             self.root.mainloop()
 

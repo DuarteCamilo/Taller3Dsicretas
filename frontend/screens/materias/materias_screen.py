@@ -36,11 +36,9 @@ class MateriasScreen:
         self.cantidad_horas = tk.StringVar(value="2")  # Valor por defecto 2
         self.requiere_sala_sistemas = tk.BooleanVar()
         
-        # Configurar el estilo de la ventana
         self.setup_ui()
-        
-        # Cargar datos iniciales
         self.load_materias()
+        self.center_window()
 
     def setup_ui(self):
         # Configurar el estilo de la ventana
@@ -478,6 +476,14 @@ class MateriasScreen:
         if self.table.selection():
             self.table.selection_remove(self.table.selection()[0])
 
+    def center_window(self):
+        self.root.update_idletasks()
+        width = self.root.winfo_width()
+        height = self.root.winfo_height()
+        x = (self.root.winfo_screenwidth() // 2) - (width // 2)
+        y = (self.root.winfo_screenheight() // 2) - (height // 2)
+        self.root.geometry(f'+{x}+{y}')
+    
     def run(self):
         """Inicia el bucle principal de la aplicación"""
         if self.is_main_window:

@@ -50,6 +50,7 @@ class DocentesScreen:
         # Cargar datos iniciales
         self.load_docentes()
         self.load_materias()  # Cargar materias al iniciar
+        self.center_window()
         
     def setup_ui(self):
         # Frame principal con dos columnas
@@ -822,6 +823,15 @@ class DocentesScreen:
                     messagebox.showerror("Error", f"No se encontró ningún docente con la cédula {cc}.")
         except Exception as e:
             messagebox.showerror("Error", f"Error al buscar docente: {str(e)}")
+    
+    def center_window(self):
+        self.root.update_idletasks()
+        width = self.root.winfo_width()
+        height = self.root.winfo_height()
+        x = (self.root.winfo_screenwidth() // 2) - (width // 2)
+        y = (self.root.winfo_screenheight() // 2) - (height // 2)
+        self.root.geometry(f'+{x}+{y}')
+    
     
     def run(self):
         """Inicia el bucle principal de la aplicación"""
